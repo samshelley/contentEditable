@@ -12,7 +12,7 @@ This will work much better once all browsers implement clipboardData handlers. F
 This doesn't work in Firefox but it looks like they are adding clipboardData to nightly builds soon (as of March 19, 2013)
 
 Known Issues:
- * doesn't work with firefox
+ * doesn't work with firefox/IE <8 (although ie8 is definitely possible)
  * breaks undo/redo
  * doesn't imitate drag and drop selection
 
