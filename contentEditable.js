@@ -20,11 +20,11 @@
  * to nightly builds soon (as of March 19, 2013)
  *
  * Known Issues:
- *  - doesn't work with firefox
+ *  - doesn't work with firefox/IE <8 (although ie8 is definitely possible)
  *  - breaks undo/redo
  *  - doesn't imitate drag and drop selection
  *
- * Works in IE 8-10, Chrome, Safari
+ * Works in IE9-10, Chrome, Safari
  */
 (function( $ ) {
     $.fn.contentEditable = function() {
@@ -34,42 +34,41 @@
                 evt.preventDefault();
                 //webkit (and bleeding edge Firefox)
                 var selection = window.getSelection ? window.getSelection() : document.selection;
-                var range = selection.getRangeAt ? selection.getRangeAt(0) : seleciton.createRange();
+                var range = selection.getRangeAt ? selection.getRangeAt(0) : selection.createRange();
 
                 //prepare new range selection
 
-                if(range.startContainer == range.endContainer) {
-                    var startingCaretPosition = range.startOffset;
+    			var startingCaretPosition = range.startOffset;
 
-                    //place the pasted content at the cursor position within
-                    //the div
-                    var $target = $(evt.target);
-                    var clipboard = evt.originalEvent.clipboardData ? evt.originalEvent.clipboardData.getData("text/plain") :
-                        window.clipboardData.getData("Text");
-                    var newText = $target.text().substring(0,range.startOffset) +
-                        clipboard +
-                        $target.text().substring(range.endOffset,$target.text().length);
-                    $target.text(newText);
+				//place the pasted content at the cursor position within
+				//the div
+				var $target = $(evt.target);
+				var clipboard = evt.originalEvent.clipboardData ? evt.originalEvent.clipboardData.getData("text/plain") :
+					window.clipboardData.getData("Text");
+				var newText = $target.text().substring(0,range.startOffset) +
+				clipboard +
+				$target.text().substring(range.endOffset,$target.text().length);
+				$target.text(newText);
 
-                    //create a new selection range so that the cursor is at the end
-                    //of the newly pasted content
-                    var targetNode = evt.target;
-                    if(evt.originalEvent.clipboardData) { // webkit
-                        if(evt.target.childNodes.length > 0) targetNode = evt.target.childNodes[0];
-                        var newRange = document.createRange();
-                        newRange.setStart(targetNode,startingCaretPosition+clipboard.length);
-                        newRange.setEnd(targetNode,startingCaretPosition+clipboard.length);
-                        if(selection.rangeCount > 0) selection.removeAllRanges();
-                        selection.addRange(newRange);
-                    } else { //IE
-                        if(evt.target.childNodes.length > 0) targetNode = evt.target.childNodes[0];
-                        var newRange = targetNode.createTextRange();
-                        newRange.moveStart("character",startingCaretPosition+clipboard.length);
-                        newRange.moveEnd("character",startingCaretPosition+clipboard.length);
-                        newRange.select();
-                    }
-
-                }
+				//create a new selection range so that the cursor is at the end
+				//of the newly pasted content
+				var targetNode = evt.target;
+				if(window.getSelection) { // webkit
+					if(evt.target.childNodes.length > 0) targetNode = evt.target.childNodes[0];
+					var newRange = document.createRange();
+					newRange.setStart(targetNode,startingCaretPosition+clipboard.length);
+					newRange.setEnd(targetNode,startingCaretPosition+clipboard.length);
+					if(selection.rangeCount > 0) selection.removeAllRanges();
+					selection.addRange(newRange);
+				} else { //IE
+					if(evt.target.childNodes.length > 0) targetNode = evt.target.childNodes[0];
+					
+					var newRange = document.selection.createRange();
+					newRange.moveToElementText(evt.target);
+					newRange.setStart(targetNode,startingCaretPosition+clipboard.length);
+					newRange.setEnd(targetNode,startingCaretPosition+clipboard.length);
+					newRange.select();
+				}
             }
         });
         this.on("drop", function(evt) {
