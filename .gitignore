@@ -1,0 +1,7 @@
+# Ignore all emacs backup files
+*~
+\#*#
+
+#WebStorm ignores
+.idea
+.DS_Store

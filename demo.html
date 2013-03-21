@@ -1,0 +1,37 @@
+<html>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="contentEditable.js"></script>
+<style>
+    .editableSpan {
+        font-size:20px;
+        padding:3px;
+        border:black solid 1px;
+    }
+    div.cursor {
+        display: inline-block;
+        background: #000;
+        margin-left: 1px;
+        position:fixed;
+        float:left;
+        top:16px;
+        left:20px;
+        width:1px;
+        animation: blink 1.2s linear 0s infinite;
+        -moz-animation: blink 1.2s linear 0s infinite;
+    }
+
+    @-moz-keyframes blink {
+        0% { opacity: 0}
+        100% {opacity: 1}
+    }
+</style>
+<script>
+    $(document).ready(function() {
+       $(".editableSpan").contentEditable();
+    });
+</script>
+<body>
+<span class="editableSpan" contenteditable="true">Type here</span>
+<div id="test" style="display:inline;font-size:30px;color:red">Try pasting or dragging this text</div>
+</body>
+</html>
