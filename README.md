@@ -1,7 +1,6 @@
 contentEditable
 ===============
 
-Prevents pasting of HTML objects when using copy/cut/paste and drag and drop for contentEditable divs
 This plugin fixes the copy/cut/paste and drag and drop problems that happen when you make something contenteditable.
 
 There are a lot of full featured wysiwyg editors--all this plugin does it make sure that you can only paste plain-text into content editable fields.
